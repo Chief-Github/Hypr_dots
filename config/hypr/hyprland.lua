@@ -66,11 +66,11 @@ hl.on("hyprland.start", function ()
   -------------
   -- DAEMONS --
   -------------
-  hl.exec_cmd("swww-daemon")
+  hl.exec_cmd("awww-daemon")
   hl.exec_cmd("swayosd-server")
   hl.exec_cmd("eww daemon")
   hl.exec_cmd("hypridle")
-  hl.exec_cmd("swaync")
+--  hl.exec_cmd("swaync") Moving to quickshell.
   hl.exec_cmd("conky --daemonize")
 
   ------------
@@ -79,19 +79,23 @@ hl.on("hyprland.start", function ()
 --  hl.exec_cmd("firefox -P AI-chatgpt --new-window https://chatgpt.com --name chatgpt") -- claude better...
 -- moving to qshell  hl.exec_cmd("waybar")
   hl.exec_cmd("quickshell")
-  hl.exec_cmd("spotify-launcher")
+  hl.exec_cmd("[noinitialfocus] spotify-launcher")
   hl.exec_cmd("kitty --class neofetch-startup --title neofetch-startup --hold sh -lc 'neofetch'")
-  hl.exec_cmd("~/.config/hypr/autostart.sh")
+  hl.exec_cmd("kitty +kitten panel --edge=background --instance-group=cava-startup --config=/home/chief/.config/kitty/cava_kitty.conf --margin-top=238 --margin-right=1200 --margin-left=2 --margin-bottom=3 --name=cava-startup cava -p ~/.config/cava/config.conf &")
+--  hl.exec_cmd("~/.config/hypr/autostart.sh")
   hl.exec_cmd("systemctl --user start hyprpolkitagent")
-  hl.exec_cmd("[workspace 2] firefox") 
+  hl.exec_cmd("[workspace 2] firefox -P 'default-release'") 
+--  hl.exec_cmd("[workspace 2] firefox -P 'fukads' --no-remote")
   hl.exec_cmd("eww open clock-window")
   hl.exec_cmd("hyprpm reload")
-  hl.exec_cmd("[workspace special:magic] blueman-manager ")
-  hl.exec_cmd("[workspace special:magic] kitty --title water --hold sh -c 'while true; do notify-send \"Drink Water\" \"Time to hydrate!\"; sleep 420; done'")  
+  hl.exec_cmd("[workspace special:magic silent] blueman-manager")
+  hl.exec_cmd("[workspace special:magic silent] kitty --title water --hold sh -c 'while true; do notify-send \"Drink Water\" \"Time to hydrate!\"; sleep 420; done'")  
   hl.exec_cmd("wl-paste --watch cliphist store")
   hl.exec_cmd("[workspace special:claude; float; move 720 39; size 800 650] obsidian")
-  hl.exec_cmd("[workspace special:claude; float; move 1120 328; size 400 616] gnome-calculator")
+--  hl.exec_cmd("[workspace special:claude; float; move 1120 328; size 400 616] gnome-calculator")
   hl.exec_cmd("[workspace special:claude; float; move 16 72; size 687 835] kitty --class claude-startup --title claude-startup --hold sh -lc 'cd ~/scratch && claude'")
+
+
 
   -------------
   -- APPLETS --
@@ -120,9 +124,44 @@ hl.env("ELECTRON_OZONE_PLATFORM_HINT","auto")
 ------------------
 ---HYPR PLUGINS---
 ------------------
---hl.source("~/.config/hypr/plugins.conf")
+if hl.plugin.hyprglass then
+    local hg = hl.plugin.hyprglass
 
+    hg.preset("glass", { chromatic_aberration = 0.2 })
+    hg.preset("bar_glass_2", { inherits = "glass",refraction_strength  = 2.0 })
+    hg.preset("bar_glass", {
+        blur_strength        = 1.0,
+        refraction_strength  = 2.6,
+        chromatic_aberration = 0.2,
+        fresnel_strength      = 0.3,
+        specular_strength     = 0.4})
 
+hg.config({
+        default_theme  = "dark",
+        default_preset = "glass",
+        blur_strength  = 10,
+        dark = {
+            brightness   = 0.85,
+            contrast     = 1.05,
+            saturation   = 0.60,
+            vibrancy     = 0.25,
+            adaptive_dim = 0.40,
+        },
+        layers = { enabled = 1 },
+    })
+
+    
+    hg.layer("rofi")
+    hg.layer("logout_dialog")
+    hg.layer("swaync-control-center")
+    hg.layer("swaync-notification-window")
+    hg.layer("swayosd", { preset = "bar_glass_2" })
+    hg.layer("waybar",  { preset = "clear" })
+    hg.layer("quickshell", { preset = "bar_glass_2" })
+--    hg.layer("conky",  { preset = "clear" })
+    hg.layer("eww",  { preset = "bar_glass_2" })
+
+end
 -----------------------
 ----- PERMISSIONS -----
 -----------------------
@@ -141,6 +180,16 @@ hl.env("ELECTRON_OZONE_PLATFORM_HINT","auto")
 -- hl.permission("/usr/(lib|libexec|lib64)/xdg-desktop-portal-hyprland", "screencopy", "allow")
 -- hl.permission("/usr/(bin|local/bin)/hyprpm", "plugin", "allow")
 
+local matugen_colors = {}
+do
+    local f = io.open(os.getenv("HOME") .. "/.config/hypr/matugen_colors.txt")
+    if f then
+        for a, rgb in f:read("*a"):gmatch("0x(%x%x)(%x%x%x%x%x%x)") do
+            matugen_colors[#matugen_colors + 1] = "rgba(" .. rgb .. a .. ")"
+        end
+        f:close()
+    end
+end
 
 -----------------------
 ---- LOOK AND FEEL ----
@@ -156,7 +205,9 @@ hl.config({
 
         col = {
             --active_border   = { colors = {"rgba(33ccffee)", "rgba(00ff99ee)"}, angle = 45 },
-            active_border = "rgb(138,43,226)",
+            active_border = #matugen_colors > 0
+                and { colors = matugen_colors, angle = 360 }
+                or "rgb(138,43,226)",
             inactive_border = "rgba(595959aa)",
         },
 
@@ -324,6 +375,7 @@ hl.config({
 
         touchpad = {
             natural_scroll = false,
+            disable_while_typing = false,
         },
     },
 })
@@ -374,12 +426,15 @@ hl.bind(mainMod .. " + R", hl.dsp.exec_cmd(menu2))
 hl.bind(mainMod .. " + SHIFT + R", hl.dsp.exec_cmd(menu))
 hl.bind(mainMod .. " + semicolon", hl.dsp.exec_cmd("rofi -modi emoji -show emoji -kb-secondary-copy \"\" -kb-custom-1 Ctrl+c"))
 hl.bind(mainMod .. " + X", hl.dsp.exec_cmd("pkill rofi"))
+hl.bind(mainMod .. " + S", hl.dsp.exec_cmd("cool-retro-term"))
 hl.bind(mainMod .. " + SHIFT + E", hl.dsp.exec_cmd("kitty --title yazi -e yazi"))
-hl.bind(mainMod .. " + W", hl.dsp.exec_cmd("swaync-client -t"))
+hl.bind(mainMod .. " + W", hl.dsp.exec_cmd("qs ipc call sidebar toggle"))
 hl.bind(mainMod .. " + B", hl.dsp.exec_cmd("firefox"))
 hl.bind(mainMod .. " + O", hl.dsp.exec_cmd("obsidian"))
 hl.bind(mainMod .. " + I", hl.dsp.exec_cmd("nwg-look"))
-hl.bind(mainMod .. " + P", hl.dsp.exec_cmd("waypaper"))
+hl.bind(mainMod .. "+ SHIFT + P", hl.dsp.exec_cmd("waypaper"))
+hl.bind(mainMod .. " + P", hl.dsp.exec_cmd("qs -p ~/.config/quickshell/hyprquickpaper"))
+
 hl.bind(mainMod .. " + ALT + V", hl.dsp.exec_cmd("cliphist list | rofi -dmenu | cliphist decode | wl-copy"))
 hl.bind(mainMod .. " + T", hl.dsp.exec_cmd("rofi -show theme"))
 hl.bind(mainMod .. " + L", hl.dsp.exec_cmd("wlogout"))
@@ -481,7 +536,7 @@ hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("swayosd-client --output-volume 
 hl.bind("XF86AudioMute",        hl.dsp.exec_cmd("swayosd-client --output-volume mute-toggle"),     { locked = true, repeating = true })
 hl.bind("XF86AudioMicMute",     hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"),   { locked = true, repeating = true })
 hl.bind("XF86MonBrightnessUp",  hl.dsp.exec_cmd("swayosd-client --brightness raise"),                  { locked = true, repeating = true })
-hl.bind("XF86MonBrightnessDown",hl.dsp.exec_cmd("swayosd-client --brightness lower"),                  { locked = true, repeating = true })
+hl.bind("XF86MonBrightnessDown",hl.dsp.exec_cmd("swayosd-client --brightness lower --min-brightness 1"),                  { locked = true, repeating = true })
 hl.bind(mainMod .. " + ALT + up", hl.dsp.exec_cmd("swayosd-client --output-volume raise"))
 hl.bind(mainMod .. " + ALT + down", hl.dsp.exec_cmd("swayosd-client --output-volume lower"))
 hl.bind("switch:off:Lid Switch", hl.dsp.exec_cmd("hyprlock --config ~/.config/hypr/hyprlock-current.conf"), { locked = true })
@@ -494,17 +549,19 @@ hl.bind("XF86AudioNext",  hl.dsp.exec_cmd("playerctl next"),       { locked = tr
 hl.bind("XF86AudioPause", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
 hl.bind("XF86AudioPlay",  hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
 hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = true })
+hl.bind(mainMod .. " + ALT + L", hl.dsp.exec_cmd("~/.config/hypr/scripts/spotify_like.sh"))
+hl.bind(mainMod .. " + ALT + O", hl.dsp.exec_cmd("~/.config/hypr/scripts/spotify_add_to_playlist.sh"))
 
 -----------------
 -- LAYER RULES --
 -----------------
-hl.layer_rule({ name = "blur-rofi",match = { namespace = "^(rofi)$" },                       blur = true, ignore_alpha = 0 })
-hl.layer_rule({ name = "blur-conky",match = { namespace = "^(conky_namespace)$" },             blur = true, ignore_alpha = 0 })
-hl.layer_rule({ name = "blur-swayosd",match = { namespace = "^(swayosd)$" },                    blur = true, ignore_alpha = 0 })
-hl.layer_rule({ name = "blur-gtk",match = { namespace = "^(gtk-layer-shell)$" },             blur = true, ignore_alpha = 0 })
-hl.layer_rule({ name = "blur-waybar",match = { namespace = "^(waybar)$" },                     blur = true, ignore_alpha = 0 })
-hl.layer_rule({ name = "blur-logout",match = { namespace = "^(logout_dialog)$" },              blur = true, ignore_alpha = 0 })
-hl.layer_rule({ name = "blur-hyprlock",match = { namespace = "^(hyprlock)$" },                   blur = true, ignore_alpha = 0 })
+hl.layer_rule({ name = "blur-rofi",match = { namespace = "^(rofi)$" },                             blur = true, ignore_alpha = 0 })
+hl.layer_rule({ name = "blur-conky",match = { namespace = "^(conky)$" }, blur = true, ignore_alpha = 0 })
+hl.layer_rule({ name = "blur-swayosd",match = { namespace = "^(swayosd)$" },                       blur = true, ignore_alpha = 0 })
+hl.layer_rule({ name = "blur-gtk",match = { namespace = "^(gtk-layer-shell)$" },                   blur = true, ignore_alpha = 0 })
+hl.layer_rule({ name = "blur-waybar",match = { namespace = "^(waybar)$" },                         blur = true, ignore_alpha = 0 })
+hl.layer_rule({ name = "blur-logout",match = { namespace = "^(logout_dialog)$" },                  blur = true, ignore_alpha = 0 })
+hl.layer_rule({ name = "blur-hyprlock",match = { namespace = "^(hyprlock)$" },                     blur = true, ignore_alpha = 0 })
 hl.layer_rule({ name = "blur-swaync-cc", match = { namespace = "^(swaync-control-center)$" },      blur = true, ignore_alpha = 0 })
 hl.layer_rule({ name = "blur-swaync-nw", match = { namespace = "^(swaync-notification-window)$" }, blur = true, ignore_alpha = 0 })
 hl.layer_rule({ name = "no-anim-hyprpicker",match = { namespace = "hyprpicker" }, no_anim = true })
@@ -537,6 +594,8 @@ hl.window_rule({ name = "wr-mpv",match = { class = "^(mpv)$" },float = true })
 hl.window_rule({ name = "wr-steam-browser",match = { title = "Steam - Browser" },float = true })
 hl.window_rule({ name = "wr-waydroid",match = { class = "^(Waydroid)$" },fullscreen = true })
 hl.window_rule({ name = "wr-calc",match = { class = "^(org.gnome.Calculator)$" },float = true })
+hl.window_rule({ name = "wr-xgps",match = { class = "^(xgps)$" },float = true, size = "500 500", center = true })
+
 
 -- Spotify
 hl.window_rule({ name = "wr-spotify-lower",  match = { class = "^(spotify)$" }, float = true, size = "859 734", move = "661 116", workspace = "special:magic" })
