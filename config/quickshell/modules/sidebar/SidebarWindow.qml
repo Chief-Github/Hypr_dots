@@ -7,6 +7,7 @@ import QtQuick 6.10
 import QtQuick.Layouts 6.10
 import QtQuick.Controls 6.10 as QQC
 import Quickshell
+import Quickshell.Io // IpcHandler lives here
 import Quickshell.Wayland
 import "../../config" as QsConfig
 import "../../services" as QsServices
@@ -54,6 +55,10 @@ PanelWindow {
             notifs.markAllRead()
             Qt.callLater(() => panel.forceActiveFocus())
         }
+    }
+    IpcHandler {
+        target: "sidebar"
+        function toggle(): void { root.shouldShow = !root.shouldShow }
     }
 
     screen: Quickshell.screens[0]

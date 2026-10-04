@@ -15,7 +15,7 @@
     "popupWidth": 340,
     "maxVisible": 5,
     "timeoutMs": 7000,
-    "registerServer": false,
+    "registerServer": true,
     "spacing": 10,
     "margin": 10
   },

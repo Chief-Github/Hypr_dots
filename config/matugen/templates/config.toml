@@ -1,0 +1,21 @@
+[config]
+scheme = "scheme-tonal-spot"
+
+[templates.kitty]
+input_path = '~/.config/matugen/templates/kitty.conf'
+output_path = '~/.config/kitty/colours.conf'
+post_hook = 'pkill -SIGUSR1 kitty'
+
+[templates.waybar]
+input_path = './templates/waybar.conf'
+output_path = '~/.config/waybar/colours.css'
+post_hook = 'pkill -SIGUSR2 waybar'
+
+[templates.cava]
+input_path = '~/.config/matugen/templates/cava.conf'
+output_path = '~/.config/cava/themes/dynamic_cava.conf'                                            
+post_hook = 'pkill -USR1 cava' 
+
+[templates.rofi]
+input_path = '~/.config/matugen/templates/rofi.rasi'
+output_path = '~/.config/rofi/themes/rofi_dynamic.rasi'

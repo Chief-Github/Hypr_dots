@@ -14,7 +14,7 @@ PanelWindow {
     id: popupWindow
 
     property bool shouldShow: false
-    property string location: ""
+    property string location: "London"
     readonly property var pywal: QsServices.Pywal
 
     readonly property color cSurface: Qt.rgba(pywal.background.r, pywal.background.g, pywal.background.b, 0.48)
@@ -362,7 +362,7 @@ PanelWindow {
                         width: parent.width; height: 28
                         Text {
                             anchors.left: parent.left; anchors.verticalCenter: parent.verticalCenter
-                            text: "Weather · " + popupWindow.location
+                            text: "Weather · " //+ popupWindow.location
                             color: cPrimary
                             font.pixelSize: 13; font.weight: Font.Bold; font.family: "Inter"
                         }
@@ -1003,7 +1003,7 @@ PanelWindow {
                         opacity: 0
                         transform: Translate { y: moonCard._dy }
                         width: parent.width
-                        height: moonRow.implicitHeight + 37
+                        height: moonRow.implicitHeight + 45
                         radius: 12
                         color: cSurfaceContainer
                         border.color: cBorder; border.width: 1
@@ -1011,7 +1011,7 @@ PanelWindow {
 
                         Column {
                             anchors { left: parent.left; right: parent.right; top: parent.top; margins: 10 }
-                            spacing: 10
+                            spacing: 5
 
                             Text {
                                 text: "Moon Phase"

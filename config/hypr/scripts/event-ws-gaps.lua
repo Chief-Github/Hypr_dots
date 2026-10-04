@@ -1,6 +1,5 @@
 -- Remove / comment the line below to enable this feature.
 -- Don't forget to relaod configuration.
-
 do return end
 
 -- Not applicable in Scrolling & Monocle layouts

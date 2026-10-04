@@ -11,7 +11,7 @@ import qs.services
 Item {
     id: root
 
-    property string location: ""
+    property string location: "London"
     property var weatherPopup
 
     property string temp: "--"

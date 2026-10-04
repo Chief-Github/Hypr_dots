@@ -1,8 +1,9 @@
 /********************************
-    Made by Chief-Github 
+    Made by Chief-Github
 https://github.com/Chief-Github
 *********************************/
-@define-color cc-bg               #661c13;  /* warm, dark card */
+/* Sunset palette for swaync — only colors changed -best bg 661c13 - old bg 1A1110*/
+@define-color cc-bg alpha(#661c13, 0.5);  /* warm, dark card */
 @define-color noti-border-color   #FFB86B;  /* peach border */
 @define-color noti-bg             #231918;  /* panel bg */
 @define-color noti-bg-darker      #322826;  /* rows / headers */

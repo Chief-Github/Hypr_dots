@@ -1,8 +1,8 @@
 /********************************
-    Made by Chief-Github 
+    Made by Chief-Github
 https://github.com/Chief-Github
 *********************************/
-@define-color cc-bg #150027;
+@define-color cc-bg alpha(#150027, 0.5);
 @define-color noti-border-color #dcd7ba;
 @define-color noti-bg #11111b;
 @define-color noti-bg-darker #332D47;

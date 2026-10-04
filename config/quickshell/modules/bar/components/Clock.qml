@@ -12,6 +12,7 @@ Item {
     property var controlCenter
     property var sidebar
     property var dashboard
+    property bool timeHidden: false
     
     implicitWidth: clockRow.implicitWidth
     implicitHeight: clockRow.implicitHeight
@@ -29,7 +30,7 @@ Item {
             // Hours
             Text {
                 id: hoursText
-                property string _live: Time.format("hh")
+                property string _live: root.timeHidden ? "xx" : Time.format("hh")
                 property string _shown: _live
                 property real _angle: 0
 
@@ -77,7 +78,7 @@ Item {
             // Minutes
             Text {
                 id: minutesText
-                property string _live: Time.format("mm")
+                property string _live: root.timeHidden ? "xx" : Time.format("mm")
                 property string _shown: _live
                 property real _angle: 0
 
@@ -146,7 +147,7 @@ Item {
                 rmBootFile.running = true
                 return
             }
-            rofiProc.running = true
+            root.timeHidden = !root.timeHidden
         }
     }
 }

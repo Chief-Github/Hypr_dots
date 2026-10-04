@@ -40,7 +40,7 @@ post_hook = 'eww reload'
 [templates.swaync]
 input_path = '~/.config/matugen/templates/swaync.css'
 output_path = '~/.config/swaync/themes/swaync_dynamic.css'
-post_hook = 'swaync-client -rs'
+#post_hook = 'swaync-client -rs'
 
 [templates.wlogout]
 input_path = '~/.config/matugen/templates/wlogout.css'

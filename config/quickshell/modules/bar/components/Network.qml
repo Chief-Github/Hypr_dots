@@ -19,6 +19,8 @@ Item {
     readonly property bool isEnabled: network.wifiEnabled
     readonly property int signalStrength: isConnected ? network.active.strength : 0
     readonly property string networkName: isConnected ? (network.active.ssid ?? "Connected") : ""
+    property bool hideSsid: false
+    readonly property string displayName: hideSsid ? networkName.replace(/[^_\- ]/g, "X") : networkName
     
     implicitWidth: networkRow.implicitWidth
     implicitHeight: 20
@@ -67,7 +69,7 @@ Item {
             text: {
                 if (!isEnabled) return "Off"
                 if (!isConnected) return "No WiFi"
-                return networkName
+                return displayName
             }
             
             font.family: "Inter"
@@ -91,10 +93,12 @@ Item {
       anchors.margins: -4
       cursorShape: Qt.PointingHandCursor
       hoverEnabled: true
-      acceptedButtons: Qt.LeftButton | Qt.RightButton
+      acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
 
       onClicked: mouse => {
-          if (mouse.button === Qt.RightButton) {
+          if (mouse.button === Qt.MiddleButton) {
+              root.hideSsid = !root.hideSsid
+          } else if (mouse.button === Qt.RightButton) {
               if (root.ipPopup)
                   root.ipPopup.shouldShow = !root.ipPopup.shouldShow
           } else {

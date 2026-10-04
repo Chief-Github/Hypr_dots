@@ -51,6 +51,11 @@ ShellRoot {
     }
 
     Loader {
+        id: notificationPopupsLoader
+        source: "modules/bar/components/NotificationPopups.qml"
+    }
+
+    Loader {
         //source: "modules/boot/BootSplash" + "3" + ".qml"
 
         source: "modules/boot/BootSplash" + Math.floor(Math.random() * 4) + ".qml"
