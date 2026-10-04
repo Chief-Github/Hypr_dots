@@ -35,8 +35,6 @@ if ! command -v pacman >/dev/null 2>&1; then
   err "This script is for Arch-based systems (pacman)."; exit 1
 fi
 
-
-
 # sanity check
 if [[ ! -d "$REPO_CONFIG_DIR" ]]; then
   err "Config dir not found: $REPO_CONFIG_DIR"
@@ -67,6 +65,8 @@ if [[ "$answer" == "y" || "$answer" == "Y" ]]; then
 else
     exit 1
 fi 
+sleep 1
+sudo -v
 
 sleep 1
 echo -e "${BOLD}${BLU}✨ Starting Dotfile Installation ✨${RST}"
